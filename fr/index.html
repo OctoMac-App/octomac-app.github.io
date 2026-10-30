@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OctoMac</title>
+<meta name="description" content="Une app Mac sympa pour vos imprimantes 3D sous OctoPrint. Toutes vos imprimantes d’un coup d’œil, les caméras en direct, un aperçu 3D qui suit l’impression, des alertes de couche, des statistiques et bien plus. Gratuite et open source.">
+<meta property="og:title" content="OctoMac">
+<meta property="og:description" content="Une app Mac sympa pour vos imprimantes 3D sous OctoPrint.">
+<meta property="og:image" content="https://octomac-app.github.io/social-preview.png">
+<meta property="og:url" content="https://octomac-app.github.io/fr/">
+<link rel="canonical" href="https://octomac-app.github.io/fr/">
+<link rel="alternate" hreflang="en-GB" href="https://octomac-app.github.io/">
+<link rel="alternate" hreflang="en" href="https://octomac-app.github.io/en-us/">
+<link rel="alternate" hreflang="cy" href="https://octomac-app.github.io/cy/">
+<link rel="alternate" hreflang="cs" href="https://octomac-app.github.io/cs/">
+<link rel="alternate" hreflang="da" href="https://octomac-app.github.io/da/">
+<link rel="alternate" hreflang="de" href="https://octomac-app.github.io/de/">
+<link rel="alternate" hreflang="es" href="https://octomac-app.github.io/es/">
+<link rel="alternate" hreflang="fi" href="https://octomac-app.github.io/fi/">
+<link rel="alternate" hreflang="fr" href="https://octomac-app.github.io/fr/">
+<link rel="alternate" hreflang="it" href="https://octomac-app.github.io/it/">
+<link rel="alternate" hreflang="nb" href="https://octomac-app.github.io/nb/">
+<link rel="alternate" hreflang="nl" href="https://octomac-app.github.io/nl/">
+<link rel="alternate" hreflang="pl" href="https://octomac-app.github.io/pl/">
+<link rel="alternate" hreflang="pt-PT" href="https://octomac-app.github.io/pt/">
+<link rel="alternate" hreflang="sv" href="https://octomac-app.github.io/sv/">
+<link rel="alternate" hreflang="x-default" href="https://octomac-app.github.io/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1C2026">
+<link rel="icon" type="image/png" href="../site/favicon.png">
+<link rel="apple-touch-icon" href="../site/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- The app uses Avenir Next and DIN, which every Mac has. These stand in for them elsewhere. -->
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@600&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* The app's palette (Sources/OctoMac/Design/Theme.swift). */
+    --graphite: #1C2026;
+    --rail: #191C21;
+    --extrusion: #262B33;
+    --extrusion-hi: #2E343D;
+    --edge: #3A414C;
+    --paper: #ECE6D8;
+    --dust: #9AA0A8;
+    --faint: #6B717A;
+    --accent: #5CCB66;
+    --cold: #5EC8E5;
+    --warm: #F2C14E;
+    --hot: #F2545B;
+    --violet: #8F7CFF;
+    --teal: #4FD1C5;
+    --orange: #F29E4C;
+    --pink: #E86A92;
+
+    --text: "Avenir Next", "Nunito Sans", system-ui, sans-serif;
+    --number: "DIN Alternate", "Barlow", "Avenir Next", sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+    --rail-width: 260px;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    color: var(--paper);
+    font: 400 16px/1.55 var(--text);
+    -webkit-font-smoothing: antialiased;
+    /* The app's background: graphite with faint layer lines every 4 points. */
+    background-color: var(--graphite);
+    background-image: repeating-linear-gradient(to bottom, rgba(255,255,255,0.018) 0 1px, transparent 1px 4px);
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+  img { max-width: 100%; height: auto; display: block; }
+  code { font-family: var(--mono); font-size: 0.92em; color: var(--paper); background: var(--rail); padding: 1px 6px; border-radius: 6px; }
+
+  /* ---------- Rail: the app's printer list, here as the page's sections ---------- */
+
+  .rail {
+    position: fixed; inset: 0 auto 0 0; width: var(--rail-width);
+    background: var(--rail);
+    border-right: 1px solid rgba(255,255,255,0.03);
+    display: flex; flex-direction: column;
+    padding: 22px 14px 18px;
+  }
+  .rail-label { font-size: 12px; font-weight: 500; color: var(--faint); margin: 12px 10px 8px; }
+  .rail nav { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; }
+  .tile {
+    display: grid; grid-template-columns: 4px 1fr auto; gap: 0 12px; align-items: center;
+    padding: 12px 14px 12px 12px; border-radius: 14px;
+    color: var(--paper); text-decoration: none;
+    transition: background 0.15s;
+  }
+  .tile:hover { background: var(--extrusion); text-decoration: none; }
+  .tile.selected { background: var(--extrusion-hi); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); }
+  .tile .bar { grid-row: span 2; width: 4px; height: 100%; min-height: 34px; border-radius: 2px; background: var(--c, var(--violet)); }
+  .tile .name { font-weight: 600; font-size: 15px; line-height: 1.25; }
+  .tile .status { grid-column: 2; font-size: 12px; color: var(--dust); line-height: 1.4; }
+  .tile .lamp { grid-row: 1; grid-column: 3; width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--violet)); box-shadow: 0 0 8px var(--c, var(--violet)); opacity: 0.35; }
+  .tile.selected .lamp { opacity: 1; }
+  .all-tile { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; color: var(--paper); font-weight: 600; font-size: 15px; }
+  .all-tile:hover { background: var(--extrusion); text-decoration: none; }
+  .grid-glyph { width: 14px; height: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .grid-glyph i { background: var(--accent); border-radius: 1.5px; }
+
+  .rail-foot { margin-top: auto; display: flex; flex-direction: column; gap: 14px; }
+  .rail-actions { display: flex; flex-direction: column; gap: 8px; }
+  /* The app's wordmark: "Octo" in the octopus's green, "Mac" in paper. */
+  .brand { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 10px; color: var(--paper); font-weight: 700; font-size: 22px; letter-spacing: -0.02em; }
+  .brand .octo { color: var(--accent); }
+  .brand img { width: 34px; height: 34px; }
+  .brand:hover { text-decoration: none; }
+
+  /* ---------- Stage ---------- */
+
+  .stage { margin-left: var(--rail-width); padding: 34px 40px 60px; max-width: calc(var(--rail-width) + 1240px); }
+
+  .header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: 26px; }
+  .header h1 { font-size: 40px; line-height: 1.1; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+  .subline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; color: var(--dust); font-size: 15px; }
+  .subline .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .subline strong { color: var(--paper); font-weight: 600; }
+  .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+  /* The language picker: a pill like the app's menus, opening a dark list. */
+  .languages { position: relative; }
+  .languages summary { list-style: none; display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px; background: var(--extrusion); box-shadow: inset 0 0 0 1px var(--edge); color: var(--paper); font-weight: 600; font-size: 14px; cursor: pointer; user-select: none; }
+  .languages summary::-webkit-details-marker { display: none; }
+  .languages summary:hover { background: var(--extrusion-hi); }
+  .languages summary svg { width: 10px; height: 6px; color: var(--faint); }
+  .languages img { display: block; border-radius: 2px; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14); }
+  .languages .menu { position: absolute; right: 0; top: calc(100% + 8px); z-index: 20; width: 220px; max-height: 70vh; overflow: auto; padding: 6px; border-radius: 14px; background: var(--extrusion); box-shadow: inset 0 0 0 1px var(--edge), 0 18px 40px rgba(0, 0, 0, 0.45); }
+  .languages .menu a { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 9px; color: var(--paper); font-size: 14px; text-decoration: none; }
+  .languages .menu a:hover { background: var(--extrusion-hi); }
+  .languages .menu a[aria-current] { background: color-mix(in srgb, var(--accent) 20%, transparent); }
+
+  /* Plate buttons: the app's capsules. */
+  .plate {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 18px; border-radius: 999px;
+    font: 600 15px/1.2 var(--text); text-decoration: none; cursor: pointer;
+    background: var(--accent); color: var(--graphite); border: 0;
+    transition: filter 0.15s, background 0.15s;
+  }
+  .plate:hover { filter: brightness(1.08); text-decoration: none; }
+  .plate.quiet { background: var(--extrusion); color: var(--paper); box-shadow: inset 0 0 0 1px var(--edge); }
+  .plate.quiet:hover { background: var(--extrusion-hi); filter: none; }
+  .plate.small { padding: 6px 13px; font-size: 13px; }
+  .plate svg { width: 15px; height: 15px; }
+
+  /* Machined panels: extrusion fill with a top bevel. */
+  .panel {
+    position: relative;
+    background: var(--extrusion);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.03), 0 18px 40px -24px rgba(0,0,0,0.6);
+  }
+  .panel::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.09), rgba(255,255,255,0) 40%, rgba(0,0,0,0.25));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+  }
+  .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 14px; }
+  .panel-head h2, .panel-head h3 { margin: 0; font-size: 18px; font-weight: 600; line-height: 1.3; }
+  .panel-head .detail { font-size: 13px; color: var(--faint); white-space: nowrap; }
+  .panel p { margin: 0 0 12px; color: var(--dust); max-width: 62ch; }
+  .panel p:last-child { margin-bottom: 0; }
+  .panel p strong { color: var(--paper); font-weight: 600; }
+
+  /* ---------- Hero: camera panel + "now printing" panel ---------- */
+
+  .hero { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr); gap: 20px; margin-bottom: 20px; align-items: start; }
+  /* Screenshots keep their own height; they never stretch to match a taller neighbour. */
+  .shot { align-self: start; border-radius: 14px; overflow: hidden; box-shadow: 0 30px 60px -30px rgba(0,0,0,0.8); }
+  .hero .shot { border-radius: 20px; align-self: center; }
+  .now { display: grid; grid-template-columns: 64px 1fr; gap: 22px; padding: 26px; }
+  .layers { display: flex; flex-direction: column-reverse; gap: 3px; padding-top: 4px; }
+  .layers i { height: 4px; border-radius: 2px; background: var(--edge); opacity: 0.5; }
+  .layers i.done { background: var(--violet); opacity: 1; }
+  .layers i.current { background: var(--warm); opacity: 1; }
+  .label { font-size: 13px; color: var(--faint); font-weight: 500; }
+  .now h2 { margin: 2px 0 6px; font-size: 22px; font-weight: 600; line-height: 1.25; }
+  .big { font: 600 72px/0.95 var(--number); letter-spacing: -0.02em; margin: 14px 0 4px; }
+  .big small { font-size: 20px; color: var(--faint); margin-left: 10px; letter-spacing: 0; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; margin: 22px 0 24px; }
+  .stat .value { font: 600 22px/1.2 var(--number); }
+  .now .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* ---------- Features ---------- */
+
+  .section-title { display: flex; align-items: baseline; gap: 12px; margin: 46px 4px 16px; }
+  .section-title h2 { font-size: 26px; font-weight: 700; margin: 0; }
+  .section-title span { color: var(--faint); font-size: 14px; }
+
+  .features { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .feature { display: flex; flex-direction: column; gap: 16px; }
+  .feature .shot { margin-top: auto; }
+  .feature.wide { grid-column: span 2; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); align-items: center; gap: 28px; }
+  .feature.wide .shot { margin: 0; align-self: center; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .chip { font-size: 13px; color: var(--dust); padding: 4px 11px; border-radius: 999px; background: var(--graphite); box-shadow: inset 0 0 0 1px var(--edge); }
+
+  /* ---------- Plugins: rows like the Machine tab ---------- */
+
+  .rows { background: var(--graphite); border-radius: 14px; padding: 0 16px; }
+  .row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--edge); }
+  .row:last-child { border-bottom: 0; }
+  .row .what { flex: 1; min-width: 0; }
+  .row .name { font-weight: 600; color: var(--paper); }
+  .row .note { font-size: 13px; color: var(--faint); }
+  .switch { flex: none; width: 38px; height: 22px; border-radius: 999px; background: var(--accent); position: relative; opacity: 0.9; }
+  .switch::after { content: ""; position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; border-radius: 50%; background: #E9E9E9; box-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+
+  /* ---------- Install ---------- */
+
+  .install { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .step-num { font: 600 15px/1 var(--number); width: 30px; height: 30px; border-radius: 10px; display: inline-grid; place-items: center; background: var(--graphite); color: var(--accent); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), inset 0 0 0 1px var(--edge); }
+  .install h3 { display: flex; align-items: center; gap: 12px; }
+  .terminal { position: relative; background: var(--rail); border-radius: 12px; padding: 14px 16px; font: 13.5px/1.7 var(--mono); color: var(--paper); overflow-x: auto; margin: 4px 0 12px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04); }
+  .terminal .prompt { color: var(--accent); user-select: none; }
+  .copy { position: absolute; top: 8px; right: 8px; }
+
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 20px; }
+
+  footer { margin-top: 44px; padding: 22px 4px 0; border-top: 1px solid var(--edge); display: flex; flex-wrap: wrap; gap: 10px 22px; color: var(--faint); font-size: 14px; }
+  footer a { color: var(--dust); }
+
+  /* ---------- Smaller windows ---------- */
+
+  .tabs { display: none; }
+
+  @media (max-width: 1180px) {
+    .hero { grid-template-columns: 1fr; }
+    .install { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 960px) {
+    .rail { display: none; }
+    .stage { margin-left: 0; padding: 22px 16px 40px; }
+    .header h1 { font-size: 32px; }
+    /* The app's tab bar stands in for the rail. */
+    .tabs {
+      display: flex; gap: 2px; padding: 4px; border-radius: 999px; background: var(--extrusion);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+      overflow-x: auto; scrollbar-width: none; margin-bottom: 18px; position: sticky; top: 10px; z-index: 5;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tabs a { flex: none; padding: 7px 15px; border-radius: 999px; color: var(--dust); font-weight: 600; font-size: 14px; }
+    .tabs a.selected { background: var(--accent); color: var(--graphite); }
+    .tabs a:hover { text-decoration: none; }
+    .features, .pair { grid-template-columns: 1fr; }
+    .feature.wide { grid-column: auto; grid-template-columns: 1fr; }
+    .now { grid-template-columns: 1fr; }
+    .layers { display: none; }
+    .big { font-size: 56px; }
+  }
+</style>
+</head>
+<body>
+
+<aside class="rail" aria-label="Sections">
+  <a class="all-tile" href="#top"><span class="grid-glyph" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Vue d’ensemble</a>
+  <div class="rail-label">Sur cette page</div>
+  <nav>
+    <a class="tile" href="#printers" style="--c: var(--violet)"><span class="bar"></span><span class="name">Toutes les imprimantes</span><span class="lamp"></span><span class="status">Côte à côte, en direct</span></a>
+    <a class="tile" href="#watch" style="--c: var(--teal)"><span class="bar"></span><span class="name">Suivez l’impression</span><span class="lamp"></span><span class="status">Caméra, 3D, alertes de couche</span></a>
+    <a class="tile" href="#files" style="--c: var(--orange)"><span class="bar"></span><span class="name">Fichiers et historique</span><span class="lamp"></span><span class="status">Imprimer, envoyer, revoir</span></a>
+    <a class="tile" href="#machine" style="--c: var(--pink)"><span class="bar"></span><span class="name">Votre machine</span><span class="lamp"></span><span class="status">Plugins, sauvegardes, journaux</span></a>
+    <a class="tile" href="#plugins" style="--c: var(--cold)"><span class="bar"></span><span class="name">Plugins</span><span class="lamp"></span><span class="status">Compatible avec vos favoris</span></a>
+    <a class="tile" href="#install" style="--c: var(--accent)"><span class="bar"></span><span class="name">Obtenir OctoMac</span><span class="lamp"></span><span class="status">Téléchargement gratuit</span></a>
+  </nav>
+  <div class="rail-foot">
+    <div class="rail-actions">
+    <a class="plate" href="https://github.com/OctoMac-App/OctoMac/releases/latest" style="justify-content:center">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v9M4 7l4 4 4-4M3 14h10"/></svg>
+      Télécharger pour Mac
+    </a>
+    <a class="plate quiet" href="https://github.com/OctoMac-App/OctoMac" style="justify-content:center">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.88.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.66 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"/></svg>
+      Voir sur GitHub
+    </a>
+    </div>
+    <a class="brand" href="#top" aria-label="OctoMac" translate="no"><img src="../site/mark.png" alt=""><span><span class="octo">Octo</span>Mac</span></a>
+  </div>
+</aside>
+
+<main class="stage" id="top">
+
+  <nav class="tabs" aria-label="Sections">
+    <a href="#top" class="selected">Vue d’ensemble</a>
+    <a href="#printers" class="tab">Imprimantes</a>
+    <a href="#watch" class="tab">Suivi</a>
+    <a href="#files" class="tab">Fichiers</a>
+    <a href="#machine" class="tab">Machine</a>
+    <a href="#plugins" class="tab">Plugins</a>
+    <a href="#install" class="tab">Télécharger</a>
+  </nav>
+
+  <header class="header">
+    <div>
+      <h1>OctoMac</h1>
+      <div class="subline"><span class="dot" aria-hidden="true"></span><strong>Prête</strong> Une app Mac sympa pour vos imprimantes 3D sous OctoPrint</div>
+    </div>
+    <div class="header-actions">
+      <details class="languages" translate="no"><summary aria-label="Language: Français"><img src="../site/flags/fr.svg" alt="" width="20" height="15"><span>Français</span><svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="menu"><a href="../" hreflang="en-GB" lang="en-GB"><img src="../site/flags/gb.svg" alt="" width="20" height="15">English (UK)</a><a href="../en-us/" hreflang="en" lang="en"><img src="../site/flags/us.svg" alt="" width="20" height="15">English (US)</a><a href="../cy/" hreflang="cy" lang="cy"><img src="../site/flags/gb-wls.svg" alt="" width="20" height="15">Cymraeg</a><a href="../cs/" hreflang="cs" lang="cs"><img src="../site/flags/cz.svg" alt="" width="20" height="15">Čeština</a><a href="../da/" hreflang="da" lang="da"><img src="../site/flags/dk.svg" alt="" width="20" height="15">Dansk</a><a href="../de/" hreflang="de" lang="de"><img src="../site/flags/de.svg" alt="" width="20" height="15">Deutsch</a><a href="../es/" hreflang="es" lang="es"><img src="../site/flags/es.svg" alt="" width="20" height="15">Español</a><a href="../fi/" hreflang="fi" lang="fi"><img src="../site/flags/fi.svg" alt="" width="20" height="15">Suomi</a><a href="../fr/" hreflang="fr" lang="fr" aria-current="true"><img src="../site/flags/fr.svg" alt="" width="20" height="15">Français</a><a href="../it/" hreflang="it" lang="it"><img src="../site/flags/it.svg" alt="" width="20" height="15">Italiano</a><a href="../nb/" hreflang="nb" lang="nb"><img src="../site/flags/no.svg" alt="" width="20" height="15">Norsk bokmål</a><a href="../nl/" hreflang="nl" lang="nl"><img src="../site/flags/nl.svg" alt="" width="20" height="15">Nederlands</a><a href="../pl/" hreflang="pl" lang="pl"><img src="../site/flags/pl.svg" alt="" width="20" height="15">Polski</a><a href="../pt/" hreflang="pt-PT" lang="pt-PT"><img src="../site/flags/pt.svg" alt="" width="20" height="15">Português</a><a href="../sv/" hreflang="sv" lang="sv"><img src="../site/flags/se.svg" alt="" width="20" height="15">Svenska</a></div></details>
+      <a class="plate quiet" href="https://github.com/OctoMac-App/OctoMac">GitHub</a>
+      <a class="plate" href="https://github.com/OctoMac-App/OctoMac/releases/latest">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v9M4 7l4 4 4-4M3 14h10"/></svg>
+        Télécharger
+      </a>
+    </div>
+  </header>
+
+  <section class="hero" aria-label="OctoMac en un coup d’œil">
+    <div class="shot"><img src="../shots/fr/overview.jpg" width="2000" height="1340" alt="OctoMac affichant une imprimante en pleine impression : la caméra, la progression avec le temps restant et un graphique des températures"></div>
+    <div class="panel now">
+      <div class="layers" aria-hidden="true" id="layers"></div>
+      <div>
+        <div class="label">Disponible maintenant</div>
+        <h2>Toutes vos imprimantes OctoPrint, dans une app Mac native</h2>
+        <div class="big" id="version" data-latest="dernière">Gratuit<small></small></div>
+        <div class="label" id="version-note" data-released="Gratuit et open source, publié le {date}">Gratuit et open source</div>
+        <div class="stats">
+          <div class="stat"><div class="label">Langues</div><div class="value">15</div></div>
+          <div class="stat"><div class="label">Fonctionne sur</div><div class="value">macOS 15+</div></div>
+          <div class="stat"><div class="label">Puces</div><div class="value">Apple et Intel</div></div>
+          <div class="stat"><div class="label">Mises à jour</div><div class="value">Automatiques</div></div>
+        </div>
+        <div class="actions">
+          <a class="plate" href="https://github.com/OctoMac-App/OctoMac/releases/latest">Télécharger pour Mac</a>
+          <a class="plate quiet" href="#install">Homebrew</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-title" id="printers"><h2>Toutes les imprimantes d’un coup d’œil</h2><span>En direct d’OctoPrint</span></div>
+  <div class="features">
+    <article class="panel feature wide">
+      <div>
+        <div class="panel-head"><h3>Toutes les imprimantes, côte à côte</h3></div>
+        <p>Ajoutez autant de serveurs OctoPrint que vous le souhaitez. Chacun affiche son état, ses températures et sa progression dans la barre latérale, et <strong>Toutes les imprimantes</strong> réunit toutes les caméras et impressions sur un seul écran.</p>
+        <p>OctoMac écoute la connexion en direct d’OctoPrint : températures, progression et événements s’affichent dès qu’ils se produisent. Il trouve OctoPrint sur votre réseau à votre place et gère le HTTPS autosigné ainsi que les imprimantes derrière un proxy inverse.</p>
+      </div>
+      <div class="shot"><img src="../shots/fr/all-printers.jpg" width="2000" height="1340" loading="lazy" alt="Toutes les imprimantes : quatre imprimantes côte à côte, chacune avec sa caméra, sa progression et ses températures"></div>
+    </article>
+    <article class="panel feature">
+      <div class="panel-head"><h3>Toujours à portée de main</h3><span class="detail">Même quand OctoMac est fermé</span></div>
+      <p>Des widgets pour le bureau et le centre de notifications, une commande dans le centre de contrôle, un assistant dans la barre des menus et une barre de progression sur l’icône du Dock. Les notifications d’impressions terminées, échouées ou en pause arrivent avec une photo de la caméra.</p>
+      <div class="chips"><span class="chip">Widgets</span><span class="chip">Barre des menus</span><span class="chip">Progression dans le Dock</span><span class="chip">Notifications</span><span class="chip">Raccourcis clavier</span><span class="chip">15 langues</span></div>
+    </article>
+    <article class="panel feature">
+      <div class="panel-head"><h3>Contrôle total</h3><span class="detail">Déplacer, chauffer, console</span></div>
+      <p>Chauffez avec vos préréglages enregistrés, déplacez la tête d’impression, extrudez, réglez le ventilateur, la vitesse et le débit, et envoyez du G-code depuis une console qui masque le bavardage inutile, avec un aide-mémoire à côté et vos propres commandes en un clic.</p>
+      <p>Pendant l’impression, montez ou descendez la buse d’un centième de millimètre à la fois pour une première couche parfaite.</p>
+      <div class="shot"><img src="../shots/fr/console.jpg" width="2000" height="1340" loading="lazy" alt="La console avec les filtres de messages, les commandes enregistrées et l’aide-mémoire G-code"></div>
+    </article>
+  </div>
+
+  <div class="section-title" id="watch"><h2>Suivez l’impression</h2><span>Sans rester collé à l’imprimante</span></div>
+  <div class="features">
+    <article class="panel feature wide">
+      <div>
+        <div class="panel-head"><h3>Un aperçu 3D qui suit l’impression</h3></div>
+        <p>Voyez exactement ce qui sera imprimé, couche par couche ou sous forme de modèle à faire pivoter. Pendant l’impression, une petite buse suit la trajectoire au rythme de l’imprimante, et la vue monte avec elle couche après couche.</p>
+      </div>
+      <div class="shot"><img src="../shots/fr/live-preview.jpg" width="2000" height="1340" loading="lazy" alt="L’aperçu 3D du G-code, avec les couches terminées en plein et la buse sur la couche en cours"></div>
+    </article>
+    <article class="panel feature">
+      <div class="panel-head"><h3>Alertes de couche</h3><span class="detail">Aimants, écrous, changements de couleur</span></div>
+      <p>Mettez en pause à une couche pour insérer quelque chose, ou recevez simplement une notification quand l’impression y arrive. Une fois la première couche posée, OctoMac en envoie une photo, avec les boutons Pause et Arrêter l’impression, pour qu’un mauvais départ ne tourne jamais pendant des heures.</p>
+      <div class="shot"><img src="../shots/fr/layer-alerts.jpg" width="2000" height="1340" loading="lazy" alt="La fenêtre des alertes de couche avec une pause à la couche 100 et des notifications aux couches suivantes"></div>
+    </article>
+    <article class="panel feature">
+      <div class="panel-head"><h3>Quand l’imprimante a besoin de vous</h3><span class="detail">Questions, MMU, pièces ratées</span></div>
+      <p>Quand l’imprimante pose une question, comme « Plus de filament. Continuer ? », répondez depuis votre Mac. Avec un Prusa MMU, OctoMac vous demande quel filament charger quand l’imprimante le demande. Si une pièce rate, arrêtez seulement cette pièce pendant que les autres continuent. Arrêter toute l’impression demande toujours une confirmation, et un arrêt d’urgence séparé est là quand quelque chose tourne mal.</p>
+      <div class="shot"><img src="../shots/fr/mmu-filament.jpg" width="2000" height="1340" loading="lazy" alt="OctoMac demandant quel filament charger pour une impression avec un Prusa MMU"></div>
+    </article>
+    <article class="panel feature wide">
+      <div>
+        <div class="panel-head"><h3>Des clips à partager</h3></div>
+        <p>La caméra propose un mode cinéma, des instantanés en un clic et une fenêtre Image dans l’image qui flotte au-dessus de vos autres apps.</p>
+        <p>Enregistrez un GIF ou un MP4 des dix dernières secondes, des quelques suivantes ou un timelapse rapide. Regardez-le, puis enregistrez-le, copiez-le ou partagez-le.</p>
+      </div>
+      <div class="shot"><img src="../shots/fr/clip.jpg" width="2000" height="1340" loading="lazy" alt="Un clip MP4 de cinq secondes de l’imprimante, prêt à être enregistré, copié ou partagé"></div>
+    </article>
+  </div>
+
+  <div class="section-title" id="files"><h2>Fichiers et historique</h2><span>Imprimez en quelques clics</span></div>
+  <div class="features">
+    <article class="panel feature">
+      <div class="panel-head"><h3>Vos fichiers en vignettes</h3><span class="detail">Glisser-déposer</span></div>
+      <p>Parcourez vos fichiers avec les vignettes du slicer, vérifiez la durée d’impression et le filament, puis appuyez sur Imprimer. Glissez du G-code pour le téléverser, ou ouvrez-le depuis le Finder. Envoyez un fichier à une autre imprimante, ou à plusieurs à la fois, ou directement sur la carte SD de l’imprimante. Renommez ou dupliquez des fichiers, et consultez les avertissements d’OctoPrint sur les fichiers à problème.</p>
+      <p><strong>Planifiez :</strong> programmez une impression pour qu’elle soit finie à 8 h, ou mettez les suivantes en file d’attente. Quand l’une se termine, OctoMac vous demande de libérer le plateau et lance la suivante.</p>
+      <p>Les durées d’impression viennent de Print Time Genius s’il est installé, elles sont donc généralement assez justes.</p>
+    </article>
+    <article class="panel feature">
+      <div class="panel-head"><h3>Historique et statistiques</h3><span class="detail">Une imprimante ou toutes</span></div>
+      <p>Voyez ce qui a abouti et ce qui a échoué, les heures et le filament consommés, et un graphique mois par mois. Notez vos impressions et ce qui a marché, pour l’avoir sous la main la prochaine fois. Lisez, enregistrez ou supprimez sur place les vidéos timelapse d’OctoPrint, et choisissez comment elles sont créées : à chaque couche ou toutes les quelques secondes, et à quelle vitesse elles défilent.</p>
+    </article>
+    <article class="panel feature wide">
+      <div>
+        <div class="panel-head"><h3>Retour en arrière</h3></div>
+        <p>L’onglet Historique garde les chiffres qui comptent : le nombre d’impressions terminées, votre taux de réussite, le temps d’impression et le filament utilisé, et les fichiers que vous imprimez le plus.</p>
+      </div>
+      <div class="shot"><img src="../shots/fr/history.jpg" width="2000" height="1340" loading="lazy" alt="L’onglet Historique : statistiques, impressions par mois, impressions récentes et timelapses"></div>
+    </article>
+  </div>
+
+  <div class="section-title" id="machine"><h2>Connaissez votre machine</h2><span>Avant qu’elle ne vous lâche</span></div>
+  <div class="features">
+    <article class="panel feature wide">
+      <div>
+        <div class="panel-head"><h3>L’onglet Machine</h3></div>
+        <p>Trois parties bien rangées : l’imprimante, OctoPrint et le Raspberry Pi, chacune avec un point quand quelque chose demande votre attention. Le firmware de votre imprimante, l’état de l’alimentation et de la température du Raspberry Pi, et une carte 3D du niveau du plateau que vous pouvez mesurer depuis OctoMac. Comparez le plateau du jour avec une mesure précédente pour voir exactement ce qui a bougé, ou laissez le guide des vis vous dire dans quel sens et de combien tourner chaque vis de réglage, sur les plateaux à quatre coins comme sur les plateaux Prusa à neuf vis.</p>
+        <p>Installez en un clic les mises à jour d’OctoPrint et des plugins, ajoutez des plugins, activez-les ou désactivez-les, sauvegardez et restaurez OctoPrint, et lisez, enregistrez ou supprimez ses journaux. Changez le profil d’imprimante, la caméra, vos préréglages de température et le niveau de journalisation d’OctoPrint, sans ouvrir sa page web. OctoMac relaie les avertissements d’OctoPrint sur un firmware dangereux ou une carte SD presque pleine, et si une imprimante refuse de se connecter, il vous explique pourquoi en termes simples.</p>
+      </div>
+      <div class="shot"><img src="../shots/fr/machine.jpg" width="2000" height="1340" loading="lazy" alt="La section Imprimante de l’onglet Machine, avec l’imprimante, sa connexion série, les messages de l’imprimante et la carte du niveau du plateau"></div>
+    </article>
+    <article class="panel feature wide">
+      <div>
+        <div class="panel-head"><h3>Ajouter des plugins</h3></div>
+        <p>Parcourez la liste officielle des plugins d’OctoPrint depuis OctoMac, les plus populaires en premier, ou installez-en un depuis une adresse web ou un fichier. Choisissez-en un, suivez son installation, et OctoMac vous guide pour le redémarrage.</p>
+        <p>Les plugins incompatibles avec votre OctoPrint, ou que plus personne n’entretient, restent à l’écart.</p>
+      </div>
+      <div class="shot"><img src="../shots/fr/add-plugins.jpg" width="2000" height="1340" loading="lazy" alt="La fenêtre Ajouter des plugins avec la liste officielle des plugins d’OctoPrint et des boutons Installer"></div>
+    </article>
+    <article class="panel feature wide">
+      <div>
+        <div class="panel-head"><h3>Sauvegardes</h3></div>
+        <p>Sauvegardez OctoPrint avant une mise à jour ou un nouveau plugin, avec ou sans vos fichiers G-code et vos timelapses. Enregistrez une copie sur votre Mac : une carte SD défaillante se répare alors en un instant, pas en une longue soirée.</p>
+        <p>Restaurez-en une depuis la liste, ou depuis une copie sur votre Mac, et suivez la progression d’OctoPrint en direct. Les anciennes sauvegardes se suppriment depuis la même liste.</p>
+      </div>
+      <div class="shot"><img src="../shots/fr/backups.jpg" width="2000" height="1340" loading="lazy" alt="La section OctoPrint de l’onglet Machine, avec les mises à jour logicielles, les réglages d’OctoPrint, les plugins et les sauvegardes"></div>
+    </article>
+  </div>
+
+  <div class="section-title" id="plugins"><h2>Compatible avec vos plugins</h2><span>Facultatifs, et détectés automatiquement</span></div>
+  <div class="panel">
+    <div class="rows">
+      <div class="row"><div class="what"><div class="name">DisplayLayerProgress</div><div class="note">Numéros de couche, barre des couches et alertes de couche</div></div><span class="switch" aria-hidden="true"></span></div>
+      <div class="row"><div class="what"><div class="name">Cancel Objects</div><div class="note">Arrêtez une pièce ratée pendant que le reste s’imprime</div></div><span class="switch" aria-hidden="true"></span></div>
+      <div class="row"><div class="what"><div class="name">Print Time Genius</div><div class="note">Des durées d’impression plus précises</div></div><span class="switch" aria-hidden="true"></span></div>
+      <div class="row"><div class="what"><div class="name">Bed Visualizer</div><div class="note">La carte du niveau du plateau, en 2D et en 3D</div></div><span class="switch" aria-hidden="true"></span></div>
+      <div class="row"><div class="what"><div class="name">Prusa MMU</div><div class="note">Choisissez le filament quand l’imprimante le demande</div></div><span class="switch" aria-hidden="true"></span></div>
+      <div class="row"><div class="what"><div class="name">Vignettes du slicer</div><div class="note">PrusaSlicer, Cura et d’autres</div></div><span class="switch" aria-hidden="true"></span></div>
+    </div>
+  </div>
+
+  <div class="section-title" id="install"><h2>Obtenir OctoMac</h2><span>Gratuit, pour les Mac Apple silicon et Intel</span></div>
+  <div class="install">
+    <article class="panel">
+      <div class="panel-head"><h3><span class="step-num">1</span>Télécharger</h3></div>
+      <p>Ouvrez l’image disque et faites glisser OctoMac dans Applications. Il est signé et notarié par Apple, et se met à jour tout seul.</p>
+      <a class="plate" href="https://github.com/OctoMac-App/OctoMac/releases/latest">Télécharger pour Mac</a>
+    </article>
+    <article class="panel">
+      <div class="panel-head"><h3>Ou utilisez Homebrew</h3></div>
+      <div class="terminal" id="brew"><span translate="no"><span class="prompt">$ </span>brew tap octomac-app/tap<br><span class="prompt">$ </span>brew trust octomac-app/tap<br><span class="prompt">$ </span>brew install --cask octomac</span><button class="plate quiet small copy" type="button" data-copy="brew tap octomac-app/tap && brew trust octomac-app/tap && brew install --cask octomac" data-copied="Copié">Copier</button></div>
+      <p>Homebrew 7 et les versions suivantes vous demandent de faire confiance aux taps qui ne sont pas les leurs.</p>
+    </article>
+    <article class="panel">
+      <div class="panel-head"><h3><span class="step-num">2</span>Ajouter une imprimante</h3></div>
+      <p>Choisissez votre imprimante parmi celles qu’OctoMac trouve sur votre réseau, cliquez sur <strong>Demander l’accès</strong> et validez dans OctoPrint. OctoMac nécessite un compte administrateur OctoPrint et macOS 15 Sequoia ou ultérieur.</p>
+      <p>Pas d’imprimante sous la main ? Choisissez <strong>Aide → Essayer le mode démo</strong>.</p>
+    </article>
+  </div>
+
+  <div class="pair">
+    <article class="panel">
+      <div class="panel-head"><h3>Confidentiel par conception</h3></div>
+      <p>OctoMac communique directement avec vos imprimantes. Pas de compte, pas de pistage et aucun serveur à nous entre les deux. Les clés API restent sur votre Mac, dans le trousseau. <a href="https://github.com/OctoMac-App/OctoMac/blob/master/PRIVACY.md">Lire la note de confidentialité</a>.</p>
+    </article>
+    <article class="panel">
+      <div class="panel-head"><h3>Gratuit et open source</h3></div>
+      <p>Un problème ? Choisissez <strong>Aide → Signaler un problème…</strong> dans OctoMac et ouvrez un ticket sur <a href="https://github.com/OctoMac-App/OctoMac/issues">GitHub</a>. Si OctoMac vous facilite l’impression, vous pouvez <a href="https://buymeacoffee.com/rogerthomas">m’offrir un café</a>.</p>
+    </article>
+  </div>
+
+  <footer>
+    <span class="note">OctoMac est open source sous licence MIT et n’est pas affilié à OctoPrint.</span>
+    <a class="link" href="https://github.com/OctoMac-App/OctoMac">GitHub</a>
+    <a class="link" href="https://github.com/OctoMac-App/OctoMac/releases">Versions</a>
+    <a class="link" href="https://github.com/OctoMac-App/OctoMac/blob/master/CONTRIBUTING.md">Contribuer</a>
+    <a class="link" href="https://raw.githubusercontent.com/OctoMac-App/OctoMac/master/llms.txt">llms.txt</a>
+  </footer>
+</main>
+
+<script>
+  // The layer stack from the app's print panel, two thirds printed.
+  (function () {
+    const stack = document.getElementById("layers");
+    for (let i = 0; i < 46; i++) {
+      const layer = document.createElement("i");
+      if (i < 30) layer.className = "done";
+      if (i === 30) layer.className = "current";
+      stack.appendChild(layer);
+    }
+  })();
+
+  // The latest version, from GitHub. The page reads fine without it.
+  fetch("https://api.github.com/repos/OctoMac-App/OctoMac/releases/latest")
+    .then(response => response.ok ? response.json() : null)
+    .then(release => {
+      if (!release || !release.tag_name) return;
+      const version = release.tag_name.replace(/^v/, "");
+      const big = document.getElementById("version"), note = document.getElementById("version-note");
+      big.textContent = version;
+      const latest = document.createElement("small");
+      latest.textContent = big.dataset.latest;
+      big.appendChild(latest);
+      const date = new Date(release.published_at).toLocaleDateString(document.documentElement.lang, { day: "numeric", month: "long", year: "numeric" });
+      note.textContent = note.dataset.released.replace("{date}", date);
+    })
+    .catch(() => {});
+
+  // Copy the Homebrew commands.
+  document.querySelectorAll("[data-copy]").forEach(button => {
+    button.addEventListener("click", () => {
+      const label = button.textContent;
+      navigator.clipboard.writeText(button.dataset.copy).then(() => {
+        button.textContent = button.dataset.copied;
+        setTimeout(() => { button.textContent = label; }, 1500);
+      });
+    });
+  });
+
+  // Close the language picker when clicking elsewhere, or pressing Escape.
+  const languages = document.querySelector(".languages");
+  if (languages) {
+    document.addEventListener("click", event => { if (!languages.contains(event.target)) languages.open = false; });
+    document.addEventListener("keydown", event => { if (event.key === "Escape") languages.open = false; });
+  }
+
+  // Highlight the section on screen in the rail and the tab bar.
+  const links = [...document.querySelectorAll(".rail .tile, .tabs a")];
+  const sections = ["printers", "watch", "files", "machine", "plugins", "install"].map(id => document.getElementById(id));
+  function select() {
+    let current = "top";
+    for (const section of sections) {
+      if (section.getBoundingClientRect().top < window.innerHeight * 0.35) current = section.id;
+    }
+    links.forEach(link => link.classList.toggle("selected", link.getAttribute("href") === "#" + current));
+  }
+  addEventListener("scroll", select, { passive: true });
+  select();
+</script>
+</body>
+</html>

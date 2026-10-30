@@ -10,6 +10,22 @@
 <meta property="og:image" content="https://octomac-app.github.io/social-preview.png">
 <meta property="og:url" content="https://octomac-app.github.io/">
 <link rel="canonical" href="https://octomac-app.github.io/">
+<link rel="alternate" hreflang="en-GB" href="https://octomac-app.github.io/">
+<link rel="alternate" hreflang="en" href="https://octomac-app.github.io/en-us/">
+<link rel="alternate" hreflang="cy" href="https://octomac-app.github.io/cy/">
+<link rel="alternate" hreflang="cs" href="https://octomac-app.github.io/cs/">
+<link rel="alternate" hreflang="da" href="https://octomac-app.github.io/da/">
+<link rel="alternate" hreflang="de" href="https://octomac-app.github.io/de/">
+<link rel="alternate" hreflang="es" href="https://octomac-app.github.io/es/">
+<link rel="alternate" hreflang="fi" href="https://octomac-app.github.io/fi/">
+<link rel="alternate" hreflang="fr" href="https://octomac-app.github.io/fr/">
+<link rel="alternate" hreflang="it" href="https://octomac-app.github.io/it/">
+<link rel="alternate" hreflang="nb" href="https://octomac-app.github.io/nb/">
+<link rel="alternate" hreflang="nl" href="https://octomac-app.github.io/nl/">
+<link rel="alternate" hreflang="pl" href="https://octomac-app.github.io/pl/">
+<link rel="alternate" hreflang="pt-PT" href="https://octomac-app.github.io/pt/">
+<link rel="alternate" hreflang="sv" href="https://octomac-app.github.io/sv/">
+<link rel="alternate" hreflang="x-default" href="https://octomac-app.github.io/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#1C2026">
 <link rel="icon" type="image/png" href="site/favicon.png">
@@ -113,6 +129,18 @@
   .subline .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
   .subline strong { color: var(--paper); font-weight: 600; }
   .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+  /* The language picker: a pill like the app's menus, opening a dark list. */
+  .languages { position: relative; }
+  .languages summary { list-style: none; display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px; background: var(--extrusion); box-shadow: inset 0 0 0 1px var(--edge); color: var(--paper); font-weight: 600; font-size: 14px; cursor: pointer; user-select: none; }
+  .languages summary::-webkit-details-marker { display: none; }
+  .languages summary:hover { background: var(--extrusion-hi); }
+  .languages summary svg { width: 10px; height: 6px; color: var(--faint); }
+  .languages img { display: block; border-radius: 2px; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14); }
+  .languages .menu { position: absolute; right: 0; top: calc(100% + 8px); z-index: 20; width: 220px; max-height: 70vh; overflow: auto; padding: 6px; border-radius: 14px; background: var(--extrusion); box-shadow: inset 0 0 0 1px var(--edge), 0 18px 40px rgba(0, 0, 0, 0.45); }
+  .languages .menu a { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 9px; color: var(--paper); font-size: 14px; text-decoration: none; }
+  .languages .menu a:hover { background: var(--extrusion-hi); }
+  .languages .menu a[aria-current] { background: color-mix(in srgb, var(--accent) 20%, transparent); }
 
   /* Plate buttons: the app's capsules. */
   .plate {
@@ -262,7 +290,7 @@
       View on GitHub
     </a>
     </div>
-    <a class="brand" href="#top" aria-label="OctoMac"><img src="site/mark.png" alt=""><span><span class="octo">Octo</span>Mac</span></a>
+    <a class="brand" href="#top" aria-label="OctoMac" translate="no"><img src="site/mark.png" alt=""><span><span class="octo">Octo</span>Mac</span></a>
   </div>
 </aside>
 
@@ -270,12 +298,12 @@
 
   <nav class="tabs" aria-label="Sections">
     <a href="#top" class="selected">Overview</a>
-    <a href="#printers">Printers</a>
-    <a href="#watch">Watch</a>
-    <a href="#files">Files</a>
-    <a href="#machine">Machine</a>
-    <a href="#plugins">Plugins</a>
-    <a href="#install">Get it</a>
+    <a href="#printers" class="tab">Printers</a>
+    <a href="#watch" class="tab">Watch</a>
+    <a href="#files" class="tab">Files</a>
+    <a href="#machine" class="tab">Machine</a>
+    <a href="#plugins" class="tab">Plugins</a>
+    <a href="#install" class="tab">Get it</a>
   </nav>
 
   <header class="header">
@@ -284,6 +312,7 @@
       <div class="subline"><span class="dot" aria-hidden="true"></span><strong>Ready</strong> A friendly Mac app for your OctoPrint 3D printers</div>
     </div>
     <div class="header-actions">
+      <details class="languages" translate="no"><summary aria-label="Language: English (UK)"><img src="site/flags/gb.svg" alt="" width="20" height="15"><span>English (UK)</span><svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="menu"><a href="./" hreflang="en-GB" lang="en-GB" aria-current="true"><img src="site/flags/gb.svg" alt="" width="20" height="15">English (UK)</a><a href="en-us/" hreflang="en" lang="en"><img src="site/flags/us.svg" alt="" width="20" height="15">English (US)</a><a href="cy/" hreflang="cy" lang="cy"><img src="site/flags/gb-wls.svg" alt="" width="20" height="15">Cymraeg</a><a href="cs/" hreflang="cs" lang="cs"><img src="site/flags/cz.svg" alt="" width="20" height="15">Čeština</a><a href="da/" hreflang="da" lang="da"><img src="site/flags/dk.svg" alt="" width="20" height="15">Dansk</a><a href="de/" hreflang="de" lang="de"><img src="site/flags/de.svg" alt="" width="20" height="15">Deutsch</a><a href="es/" hreflang="es" lang="es"><img src="site/flags/es.svg" alt="" width="20" height="15">Español</a><a href="fi/" hreflang="fi" lang="fi"><img src="site/flags/fi.svg" alt="" width="20" height="15">Suomi</a><a href="fr/" hreflang="fr" lang="fr"><img src="site/flags/fr.svg" alt="" width="20" height="15">Français</a><a href="it/" hreflang="it" lang="it"><img src="site/flags/it.svg" alt="" width="20" height="15">Italiano</a><a href="nb/" hreflang="nb" lang="nb"><img src="site/flags/no.svg" alt="" width="20" height="15">Norsk bokmål</a><a href="nl/" hreflang="nl" lang="nl"><img src="site/flags/nl.svg" alt="" width="20" height="15">Nederlands</a><a href="pl/" hreflang="pl" lang="pl"><img src="site/flags/pl.svg" alt="" width="20" height="15">Polski</a><a href="pt/" hreflang="pt-PT" lang="pt-PT"><img src="site/flags/pt.svg" alt="" width="20" height="15">Português</a><a href="sv/" hreflang="sv" lang="sv"><img src="site/flags/se.svg" alt="" width="20" height="15">Svenska</a></div></details>
       <a class="plate quiet" href="https://github.com/OctoMac-App/OctoMac">GitHub</a>
       <a class="plate" href="https://github.com/OctoMac-App/OctoMac/releases/latest">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v9M4 7l4 4 4-4M3 14h10"/></svg>
@@ -299,8 +328,8 @@
       <div>
         <div class="label">Now available</div>
         <h2>Every OctoPrint printer, in one native Mac app</h2>
-        <div class="big" id="version">Free<small></small></div>
-        <div class="label" id="version-note">Free and open source</div>
+        <div class="big" id="version" data-latest="latest">Free<small></small></div>
+        <div class="label" id="version-note" data-released="Free and open source, released {date}">Free and open source</div>
         <div class="stats">
           <div class="stat"><div class="label">Languages</div><div class="value">15</div></div>
           <div class="stat"><div class="label">Runs on</div><div class="value">macOS 15+</div></div>
@@ -437,7 +466,7 @@
     </article>
     <article class="panel">
       <div class="panel-head"><h3>Or use Homebrew</h3></div>
-      <div class="terminal" id="brew"><span class="prompt">$ </span>brew tap octomac-app/tap<br><span class="prompt">$ </span>brew trust octomac-app/tap<br><span class="prompt">$ </span>brew install --cask octomac<button class="plate quiet small copy" type="button" data-copy="brew tap octomac-app/tap && brew trust octomac-app/tap && brew install --cask octomac">Copy</button></div>
+      <div class="terminal" id="brew"><span translate="no"><span class="prompt">$ </span>brew tap octomac-app/tap<br><span class="prompt">$ </span>brew trust octomac-app/tap<br><span class="prompt">$ </span>brew install --cask octomac</span><button class="plate quiet small copy" type="button" data-copy="brew tap octomac-app/tap && brew trust octomac-app/tap && brew install --cask octomac" data-copied="Copied">Copy</button></div>
       <p>Homebrew 7 and later ask you to trust taps outside their own.</p>
     </article>
     <article class="panel">
@@ -459,11 +488,11 @@
   </div>
 
   <footer>
-    <span>OctoMac is open source under the MIT Licence, and isn't affiliated with OctoPrint.</span>
-    <a href="https://github.com/OctoMac-App/OctoMac">GitHub</a>
-    <a href="https://github.com/OctoMac-App/OctoMac/releases">Releases</a>
-    <a href="https://github.com/OctoMac-App/OctoMac/blob/master/CONTRIBUTING.md">Contributing</a>
-    <a href="https://raw.githubusercontent.com/OctoMac-App/OctoMac/master/llms.txt">llms.txt</a>
+    <span class="note">OctoMac is open source under the MIT Licence, and isn't affiliated with OctoPrint.</span>
+    <a class="link" href="https://github.com/OctoMac-App/OctoMac">GitHub</a>
+    <a class="link" href="https://github.com/OctoMac-App/OctoMac/releases">Releases</a>
+    <a class="link" href="https://github.com/OctoMac-App/OctoMac/blob/master/CONTRIBUTING.md">Contributing</a>
+    <a class="link" href="https://raw.githubusercontent.com/OctoMac-App/OctoMac/master/llms.txt">llms.txt</a>
   </footer>
 </main>
 
@@ -485,21 +514,33 @@
     .then(release => {
       if (!release || !release.tag_name) return;
       const version = release.tag_name.replace(/^v/, "");
-      document.getElementById("version").innerHTML = version + "<small>latest</small>";
-      const date = new Date(release.published_at).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
-      document.getElementById("version-note").textContent = "Free and open source, released " + date;
+      const big = document.getElementById("version"), note = document.getElementById("version-note");
+      big.textContent = version;
+      const latest = document.createElement("small");
+      latest.textContent = big.dataset.latest;
+      big.appendChild(latest);
+      const date = new Date(release.published_at).toLocaleDateString(document.documentElement.lang, { day: "numeric", month: "long", year: "numeric" });
+      note.textContent = note.dataset.released.replace("{date}", date);
     })
     .catch(() => {});
 
   // Copy the Homebrew commands.
   document.querySelectorAll("[data-copy]").forEach(button => {
     button.addEventListener("click", () => {
+      const label = button.textContent;
       navigator.clipboard.writeText(button.dataset.copy).then(() => {
-        button.textContent = "Copied";
-        setTimeout(() => { button.textContent = "Copy"; }, 1500);
+        button.textContent = button.dataset.copied;
+        setTimeout(() => { button.textContent = label; }, 1500);
       });
     });
   });
+
+  // Close the language picker when clicking elsewhere, or pressing Escape.
+  const languages = document.querySelector(".languages");
+  if (languages) {
+    document.addEventListener("click", event => { if (!languages.contains(event.target)) languages.open = false; });
+    document.addEventListener("keydown", event => { if (event.key === "Escape") languages.open = false; });
+  }
 
   // Highlight the section on screen in the rail and the tab bar.
   const links = [...document.querySelectorAll(".rail .tile, .tabs a")];
